@@ -1,0 +1,19 @@
+import supabase from "./supabaseCreate";
+import { registerUser } from "../models/users";
+
+// export const getTasks = async () => {
+//   const { data, error } = await supabase.from("todolist").select();
+//   if (error) {
+//     return error;
+//   }
+//   return data;
+// };
+
+export const registerSB = async (newUser: registerUser) => {
+  const res = await supabase.from("users").insert(newUser);
+  return res;
+};
+
+export const loginSB = async (email: string) => {
+  return await supabase.from("users").select("*").eq("email", email).single();
+};
