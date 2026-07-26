@@ -17,3 +17,6 @@ export const registerSB = async (newUser: registerUser) => {
 export const loginSB = async (email: string) => {
   return await supabase.from("users").select("*").eq("email", email).single();
 };
+
+export const getUserById = async (id: string) =>
+  await supabase.from("users").select("*").eq("user_id", id).single();

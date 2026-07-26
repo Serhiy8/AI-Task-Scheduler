@@ -1,8 +1,19 @@
 import bcrypt from "bcrypt";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import dotenv from "dotenv/config";
+import { Request, Response, NextFunction } from "express";
+import { getUserById } from "../supabase/supabaseUser";
+import { RequestU } from "../models/users";
 
 interface HttpError extends Error {
   status: number;
 }
+
+interface TokenPayload extends JwtPayload {
+  id: string;
+}
+
+const { JWT_SECRET } = process.env;
 
 export const httpError = (status: number, message: string): HttpError => {
   const error = new Error(message) as HttpError;
@@ -16,4 +27,35 @@ export const createHashPassword = async (password: string) =>
 export const comparePassword = async (password: string, hashPassword: string) =>
   await bcrypt.compare(password, hashPassword);
 
+export const authenticate = async (
+  req: RequestU,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ");
+  if (bearer !== "Bearer") {
+    next(httpError(401, "Bad request"));
+    return;
+  }
 
+  try {
+    if (!JWT_SECRET || !token) {
+      next(httpError(500, "Server error!"));
+      return;
+    }
+    const payload = jwt.verify(token, JWT_SECRET) as TokenPayload;
+    const { id } = payload;
+    const user = await getUserById(id);
+    if (!user) {
+      next(httpError(401, "Bad request"));
+      return;
+    }
+
+    req.user = user.data;
+
+    next();
+  } catch (error) {
+    next(httpError(401, "Bad request"));
+  }
+};

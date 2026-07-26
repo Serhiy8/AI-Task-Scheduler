@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { userRouter } from "./api/router/userRouter";
+import { tasksRouter } from "./api/router/tasksRouter";
+import { authenticate } from "./utils/utils";
 
 interface AppError extends Error {
   status?: number;
@@ -12,6 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/users", userRouter);
+app.use("/api", authenticate, tasksRouter);
 
 app.get("/", (req, res) => {
   res.json({
