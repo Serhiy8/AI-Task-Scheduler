@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { loginSchema, registerSchema } from "../../models/users";
-import { loginSB, registerSB } from "../../supabase/supabaseUser";
+import { loginSchema, registerSchema, RequestU } from "../../models/users";
+import {
+  addTokenSB,
+  loginSB,
+  registerSB,
+  removeToken,
+} from "../../supabase/supabaseUser";
 import {
   comparePassword,
   createHashPassword,
@@ -38,13 +42,18 @@ export async function register(
       throw httpError(result.status, result.error.message);
     }
 
+    const userId = result.data.user_id;
+
     const payload = {
-      id: result.data.user_id,
+      id: userId,
     };
 
     const token = createToken(payload, next);
+    const addToken = await addTokenSB(userId, token || "52");
+    console.log(addToken);
 
     res.status(result.status).json({
+      userId,
       name,
       email,
       token,
@@ -67,7 +76,7 @@ export async function login(
       res.status(400).json({ message: error.details[0].message });
       return;
     }
-    const { email, password } = req.body;
+    const { email, password: passworsRow } = req.body;
     const user = await loginSB(email);
 
     if (!user.success) {
@@ -75,7 +84,7 @@ export async function login(
     }
 
     const comparePasswordResult = await comparePassword(
-      password,
+      passworsRow,
       user.data.password,
     );
 
@@ -89,10 +98,35 @@ export async function login(
 
     const token = createToken(payload, next);
 
+    const { password, ...dataWithoutPassword } = user.data;
+
     res.json({
-      token,
+      user: dataWithoutPassword,
     });
   } catch (error) {
     next(error);
   }
+}
+
+export async function getCurrent(
+  req: RequestU,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  res.json(req.user);
+}
+
+export async function loguot(
+  req: RequestU,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  if (!req.user?.user_id) {
+    return next(httpError(401, "Unauthorized"));
+  }
+  const { user_id } = req.user;
+  const result = await removeToken(user_id);
+  res.json({
+    result,
+  });
 }

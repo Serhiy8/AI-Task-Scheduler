@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import dotenv from "dotenv/config";
 import { Request, Response, NextFunction } from "express";
 import { getUserById } from "../supabase/supabaseUser";
 import { RequestU } from "../models/users";
@@ -45,7 +44,9 @@ export const authenticate = async (
       return;
     }
     const payload = jwt.verify(token, JWT_SECRET) as TokenPayload;
+
     const { id } = payload;
+    console.log(id);
     const user = await getUserById(id);
     if (!user) {
       next(httpError(401, "Bad request"));

@@ -25,3 +25,18 @@ export const loginSB = async (email: string) => {
 
 export const getUserById = async (id: string) =>
   await supabase.from("users").select("*").eq("user_id", id).single();
+
+export const addTokenSB = async (id: string, token: string) => {
+  return await supabase
+    .from("users")
+    .update({ token: token })
+    .eq("user_id", id)
+    .select();
+};
+
+export const removeToken = async (id: string) => {
+  return await supabase.from("users")
+    .update({ token: "" })
+    .eq("user_id", id)
+    .select();
+}

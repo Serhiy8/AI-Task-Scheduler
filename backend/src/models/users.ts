@@ -1,6 +1,5 @@
 import Joi from "joi";
 import { Request } from "express";
-import { title } from "process";
 
 interface User {
   user_id: string;
@@ -8,6 +7,7 @@ interface User {
   name: string;
   email: string;
   password: string;
+  token: string;
 }
 
 export interface Task {
