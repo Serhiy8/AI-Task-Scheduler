@@ -10,7 +10,12 @@ import { registerUser } from "../models/users";
 // };
 
 export const registerSB = async (newUser: registerUser) => {
-  const res = await supabase.from("users").insert(newUser);
+  const res = await supabase
+    .from("users")
+    .insert(newUser)
+    .select("*")
+    .eq("email", newUser.email)
+    .single();
   return res;
 };
 

@@ -8,8 +8,11 @@ interface NewTask {
   status: boolean;
 }
 
-export const getTasksSB = async () => {
-  const { data, error } = await supabase.from("todolist").select();
+export const getTasksSB = async (id: string) => {
+  const { data, error } = await supabase
+    .from("todolist")
+    .select("*")
+    .eq("user_id", id);
   if (error) {
     return error;
   }

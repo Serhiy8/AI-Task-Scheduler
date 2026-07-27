@@ -4,11 +4,15 @@ import { RequestU } from "../../models/users";
 import { httpError } from "../../utils/utils";
 
 export const getTasks = async (
-  req: Request,
+  req: RequestU,
   res: Response,
   next: NextFunction,
 ) => {
-  const data = await getTasksSB();
+  if (!req.user) {
+    return next(httpError(401, "Bad request"));
+  }
+  const { user_id: id } = req.user;
+  const data = await getTasksSB(id);
 
   res.json(data);
 };
@@ -18,7 +22,7 @@ export const createTask = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { title, description, status } = req.body;
+  const { title, description, status = false } = req.body;
 
   if (!req.user) {
     return httpError(401, "Not authorized");

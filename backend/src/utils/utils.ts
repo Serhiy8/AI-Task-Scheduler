@@ -59,3 +59,14 @@ export const authenticate = async (
     next(httpError(401, "Bad request"));
   }
 };
+
+export const createToken = (payload: TokenPayload, next: NextFunction) => {
+  try {
+    if (!JWT_SECRET) {
+      throw httpError(500, "Internal Server Error");
+    }
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+  } catch (error) {
+    next(httpError(401, "Bad request"));
+  }
+};

@@ -6,9 +6,12 @@ import { loginSB, registerSB } from "../../supabase/supabaseUser";
 import {
   comparePassword,
   createHashPassword,
+  createToken,
   httpError,
 } from "../../utils/utils";
 import { nanoid } from "nanoid";
+
+// REGISTER Function
 
 export async function register(
   req: Request,
@@ -30,18 +33,28 @@ export async function register(
       password: hashPassword,
     };
     const result = await registerSB(user);
+
     if (!result.success) {
       throw httpError(result.status, result.error.message);
     }
 
+    const payload = {
+      id: result.data.user_id,
+    };
+
+    const token = createToken(payload, next);
+
     res.status(result.status).json({
       name,
       email,
+      token,
     });
   } catch (error) {
     next(error);
   }
 }
+
+// LOGIN Function
 
 export async function login(
   req: Request,
@@ -56,8 +69,6 @@ export async function login(
     }
     const { email, password } = req.body;
     const user = await loginSB(email);
-
-    console.log(user);
 
     if (!user.success) {
       throw httpError(401, "Invalid email or password");
@@ -76,12 +87,7 @@ export async function login(
       id: user.data.user_id,
     };
 
-    const { JWT_SECRET } = process.env;
-    if (!JWT_SECRET) {
-      throw httpError(500, "Internal Server Error");
-    }
-
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+    const token = createToken(payload, next);
 
     res.json({
       token,
