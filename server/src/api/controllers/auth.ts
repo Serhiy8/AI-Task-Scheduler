@@ -1,12 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 import { loginSchema, registerSchema, RequestU } from "../../models/users";
-import {
-  addTokenSB,
-  loginSB,
-  registerSB,
-  removeToken,
-} from "../../supabase/supabaseUser";
+import { loginSB, registerSB } from "../../supabase/supabaseUser";
 import {
   comparePassword,
   createHashPassword,
@@ -42,20 +37,20 @@ export async function register(
       throw httpError(result.status, result.error.message);
     }
 
-    const userId = result.data.user_id;
+    const { user_id } = result.data;
 
     const payload = {
-      id: userId,
+      id: user_id,
     };
 
     const token = createToken(payload, next);
-    const addToken = await addTokenSB(userId, token || "52");
-    console.log(addToken);
 
     res.status(result.status).json({
-      userId,
-      name,
-      email,
+      user: {
+        user_id,
+        name,
+        email,
+      },
       token,
     });
   } catch (error) {
@@ -76,8 +71,8 @@ export async function login(
       res.status(400).json({ message: error.details[0].message });
       return;
     }
-    const { email, password: passworsRow } = req.body;
-    const user = await loginSB(email);
+    const { email: userEmail, password: passworsRow } = req.body;
+    const user = await loginSB(userEmail);
 
     if (!user.success) {
       throw httpError(401, "Invalid email or password");
@@ -97,11 +92,11 @@ export async function login(
     };
 
     const token = createToken(payload, next);
-
-    const { password, ...dataWithoutPassword } = user.data;
+    const { user_id, name, email } = user.data;
 
     res.json({
-      user: dataWithoutPassword,
+      user: { user_id, name, email },
+      token,
     });
   } catch (error) {
     next(error);
@@ -116,17 +111,10 @@ export async function getCurrent(
   res.json(req.user);
 }
 
-export async function loguot(
+export async function logout(
   req: RequestU,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  if (!req.user?.user_id) {
-    return next(httpError(401, "Unauthorized"));
-  }
-  const { user_id } = req.user;
-  const result = await removeToken(user_id);
-  res.json({
-    result,
-  });
+  res.status(204).send();
 }

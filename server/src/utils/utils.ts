@@ -46,10 +46,11 @@ export const authenticate = async (
     const payload = jwt.verify(token, JWT_SECRET) as TokenPayload;
 
     const { id } = payload;
-    console.log(id);
+
     const user = await getUserById(id);
+
     if (!user) {
-      next(httpError(401, "Bad request"));
+      next(httpError(401, "Unauthorized"));
       return;
     }
 
@@ -71,3 +72,4 @@ export const createToken = (payload: TokenPayload, next: NextFunction) => {
     next(httpError(401, "Bad request"));
   }
 };
+

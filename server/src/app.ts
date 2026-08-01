@@ -3,6 +3,7 @@ import cors from "cors";
 import { userRouter } from "./api/router/userRouter";
 import { tasksRouter } from "./api/router/tasksRouter";
 import { authenticate } from "./utils/utils";
+import { createTaskAI } from "./api/controllers/aiController";
 
 interface AppError extends Error {
   status?: number;
@@ -13,8 +14,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/users", userRouter);
-app.use("/api", authenticate, tasksRouter);
+app.use("/users", userRouter);
+app.use("/tasks", authenticate, tasksRouter);
+app.use("/tasks/ai", authenticate, createTaskAI);
 
 app.get("/", (req, res) => {
   res.json({
