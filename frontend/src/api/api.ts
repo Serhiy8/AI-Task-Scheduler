@@ -1,7 +1,7 @@
 import axios from "axios";
 
  export const api = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://ai-task-scheduler-8184.onrender.com/',
 });
 
 export const token = {

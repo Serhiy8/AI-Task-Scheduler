@@ -12,8 +12,15 @@ interface AppError extends Error {
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://твій-frontend.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 app.use("/users", userRouter);
 app.use("/tasks", authenticate, tasksRouter);
 app.use("/tasks/ai", authenticate, createTaskAI);
