@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTask, getTasks } from "./operations/taskOperation";
+import { createTask, getTasks, removeTask } from "./operations/taskOperation";
 import type { Task } from "./operations/taskOperation";
 
 interface TasksState {
@@ -41,6 +41,17 @@ const tasksSlice = createSlice({
       .addCase(createTask.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? "Failed to create task";
+      })
+      .addCase(removeTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(removeTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.tasks = state.tasks.filter((task) => task.task_id !== action.payload.task_id);
+      })
+      .addCase(removeTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Failed to remove task";
       })
   },
 });

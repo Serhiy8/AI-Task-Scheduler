@@ -50,3 +50,19 @@ export const createTask = createAsyncThunk<Task, NewTask, { rejectValue: string 
     }
   }
 )
+
+export const removeTask = createAsyncThunk<Task, string, { rejectValue: string }>(
+  "tasks/remove",
+  async (taskId: string, thunkAPI) => {
+    try {
+      const res = await api.delete(`tasks/${taskId}`);
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return thunkAPI.rejectWithValue(error.response?.data.message);
+      }
+
+      return thunkAPI.rejectWithValue("Failed to remove task");
+    }
+  }
+);

@@ -35,3 +35,8 @@ export const addTaskSB = async (newTask: NewTask): Promise<Task> => {
 
   return data[0];
 };
+
+export const removeTaskSB = async (_id: string): Promise<{ success: boolean; error?: any }> => {
+  const result = await supabase.from("todolist").delete().eq("task_id", _id);
+  return result;
+}

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { addTaskSB, getTasksSB } from "../../supabase/supabaseTable";
+import { addTaskSB, getTasksSB, removeTaskSB } from "../../supabase/supabaseTable";
 import { RequestU } from "../../models/users";
 import { httpError } from "../../utils/utils";
 
@@ -36,6 +36,24 @@ export const createTask = async (
   };
   const result = await addTaskSB(newTask);
   res.json(result);
+};
+
+export const removeTask = async (
+  req: RequestU,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { _id } = req.params;
+  if (!_id) {
+    return next(httpError(400, "Bad request"));
+  }
+  console.log("Task ID to remove:", _id);
+  const result = await removeTaskSB(_id as string);
+  if(!result) {
+    return next(httpError(404, "Task not found"));
+  }
+  console.log(result)
+  res.json({ task_id: _id, message: "Task removed successfully" });
 };
 
 // id: string;

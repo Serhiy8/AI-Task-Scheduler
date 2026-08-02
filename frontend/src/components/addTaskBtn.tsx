@@ -15,6 +15,7 @@ const AddTaskBtn: React.FC = () => {
      bg-blue-600 text-white
         shadow-lg
         transition hover:scale-110 hover:bg-blue-700
+        z-1
     "
       onClick={() => setIsOpen(true)}
     >

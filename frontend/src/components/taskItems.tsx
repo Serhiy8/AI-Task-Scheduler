@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { getTasks } from "../redux/slice/operations/taskOperation";
 import { token } from "../api/api";
+import { DeleteBtn } from "./deleteBtn";
 
 export const TaskItems = () => {
   const dispatch = useAppDispatch();
@@ -23,12 +24,14 @@ export const TaskItems = () => {
 
   return (
   <div className="mx-auto w-full max-w-7xl px-4 py-6">
+    
   <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
     {tasks.map((task) => (
       <li
         key={task.task_id}
         className="flex min-h-55 flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
       >
+        <DeleteBtn taskId={task.task_id ?? ""} />
         <h2 className="mb-3 text-xl font-semibold text-gray-900">
           {task.title}
         </h2>
