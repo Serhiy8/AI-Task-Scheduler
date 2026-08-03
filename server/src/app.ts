@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://ai-task-scheduler-8184.onrender.com/",
+      "https://ai-task-scheduler-pink.vercel.app",
     ],
     credentials: true,
   })
