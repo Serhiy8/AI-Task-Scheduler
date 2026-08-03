@@ -2,27 +2,31 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAiMessage } from "./operations/aiOperations";
 
 export enum AiMessagePriority {
-    Low = "low",
-    Medium = "medium",
-    High = "high"
+  Low = "low",
+  Medium = "medium",
+  High = "high",
 }
 
 export interface AiMessage {
-    title: string;
-    description: string;
-    priority: AiMessagePriority;
+  title: string;
+  description: string;
+  priority: string;
 }
 
 interface AiState {
-    aiMessages: AiMessage[];
-    isLoading: boolean;
-    error: string | null;
+  messages: AiMessage;
+  isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: AiState = {
-    aiMessages: [],
-    isLoading: false,
-    error: null,
+  messages: {
+    title: "",
+    description: "",
+    priority: "",
+  },
+  isLoading: false,
+  error: null,
 };
 
 export const aiSlice = createSlice({
@@ -31,21 +35,21 @@ export const aiSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(createAiMessage.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(createAiMessage.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.aiMessages.push(action.payload);
-    })
-    .addCase(createAiMessage.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error =
-        typeof action.payload === "string"
-          ? action.payload
-          : action.error.message ?? "Failed to create AI message";
-    });
-  }
+      .addCase(createAiMessage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createAiMessage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.messages = action.payload;
+      })
+      .addCase(createAiMessage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : (action.error.message ?? "Failed to create AI message");
+      });
+  },
 });
 
 export default aiSlice.reducer;
