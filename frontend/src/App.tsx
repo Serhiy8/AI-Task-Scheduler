@@ -20,7 +20,7 @@ function App() {
     <>
       <Routes>
         <Route
-          path="/"
+          path="/tasks"
           element={
             <PrivateRoute>
               <Header />
@@ -28,7 +28,7 @@ function App() {
           }
         >
           <Route
-            path="/tasks"
+            index
             element={
               <PrivateRoute>
                 <Dashboard />
