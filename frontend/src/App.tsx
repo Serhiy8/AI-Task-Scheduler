@@ -10,6 +10,7 @@ import { Dashboard } from "./page/tasks";
 import { useEffect } from "react";
 import { currentUser } from "./redux/slice/operations/authOperations";
 import { useAppDispatch } from "./hooks/hooks";
+import { AiCreator } from "./page/aiCreator";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,14 @@ function App() {
             </PrivateRoute>
           }
         >
+          <Route
+            path="/tasks/ai"
+            element={
+              <PrivateRoute>
+                <AiCreator />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/tasks"
             element={
