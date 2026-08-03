@@ -13,6 +13,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import tasksSlice from "./slice/tasksSlice";
+import aiSlice from "./slice/aiSlice";
 
 const persistConfig = {
   key: "auth",
@@ -26,7 +27,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthSlice,
     tasks: tasksSlice,
-    
+    aiMessages: aiSlice,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
