@@ -11,6 +11,8 @@ import { useEffect } from "react";
 import { currentUser } from "./redux/slice/operations/authOperations";
 import { useAppDispatch } from "./hooks/hooks";
 import { AiCreator } from "./page/aiCreator";
+import AddTaskBtn from "./components/tasks/addTaskBtn";
+import { Card } from "./page/Card";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -31,20 +33,29 @@ function App() {
           <Route
             index
             element={
-              <PrivateRoute>
+              <>
+                <AddTaskBtn />
                 <AiCreator />
-              </PrivateRoute>
+              </>
             }
           />
           <Route
             path="/tasks"
             element={
-              <PrivateRoute>
+              <>
+                <AddTaskBtn />
                 <Dashboard />
-              </PrivateRoute>
+              </>
             }
           />
-          
+          <Route
+            path="/tasks/:id"
+            element={
+              <>
+                <Card />                
+              </>
+            }
+          />
         </Route>
         <Route
           path="/register"

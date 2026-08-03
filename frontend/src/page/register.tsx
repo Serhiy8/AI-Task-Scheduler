@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../hooks/hooks";
 import { register, type RegiterUser } from "../redux/slice/operations/authOperations";
+import { NavLink } from "react-router-dom";
 
 export const Register = () => {
 
@@ -99,16 +100,16 @@ export const Register = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
-                Sign in
+                Sign up
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Not a member?{' '}
-            <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
-              Start a 14 day free trial
-            </a>
+            Already registered?{' '}
+            <NavLink to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
+              Sign in
+            </NavLink>
           </p>
         </div>
       </div></>

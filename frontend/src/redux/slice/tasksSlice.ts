@@ -1,15 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTask, getTasks, removeTask } from "./operations/taskOperation";
+import {
+  createTask,
+  getTaskById,
+  getTasks,
+  removeTask,
+} from "./operations/taskOperation";
 import type { Task } from "./operations/taskOperation";
 
 interface TasksState {
   tasks: Task[];
+  currentTask: Task | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: TasksState = {
   tasks: [],
+  currentTask: null,
   isLoading: false,
   error: null,
 };
@@ -47,12 +54,25 @@ const tasksSlice = createSlice({
       })
       .addCase(removeTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.tasks = state.tasks.filter((task) => task.task_id !== action.payload.task_id);
+        state.tasks = state.tasks.filter(
+          (task) => task.task_id !== action.payload.task_id,
+        );
       })
       .addCase(removeTask.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? "Failed to remove task";
       })
+      .addCase(getTaskById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTaskById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentTask = action.payload;
+      })
+      .addCase(getTaskById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Failed to fetch tasks";
+      });
   },
 });
 

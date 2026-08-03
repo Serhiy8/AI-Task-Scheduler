@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { createTask } from "../../redux/slice/operations/taskOperation";
 import { useAppDispatch } from "../../hooks/hooks";
-import { DefaultMessageAi } from "../../utils/utils";
+import { setMessage } from "../../redux/slice/aiSlice";
 
 type Props = {
   onClose: () => void;
@@ -26,13 +26,19 @@ export const CreateTaskModal = ({ onClose }: Props) => {
     };
     try {
       await dispatch(createTask(newTask));
-      toast.success("Task created successfully");
-      DefaultMessageAi();
-      onClose();
     } catch (error) {
       toast.error("Failed to create task");
       return error;
     }
+    toast.success("Task created successfully");
+    dispatch(
+      setMessage({
+        title: "",
+        description: "What's the plan for today?",
+        priority: "",
+      }),
+    );
+    onClose();
   };
   return (
     <div

@@ -1,4 +1,3 @@
-import AddTaskBtn from "../components/tasks/addTaskBtn";
 import TaskItems from "../components/tasks/taskItems";
 
 export const Dashboard = () => {
@@ -13,7 +12,6 @@ export const Dashboard = () => {
           </div>
         </header>
         <main>
-          <AddTaskBtn />
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             {<TaskItems />}
           </div>

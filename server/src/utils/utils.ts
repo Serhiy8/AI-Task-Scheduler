@@ -48,8 +48,9 @@ export const authenticate = async (
     const { id } = payload;
 
     const user = await getUserById(id);
+    console.log(user)
 
-    if (!user) {
+    if (!user.success) {
       next(httpError(401, "Unauthorized"));
       return;
     }

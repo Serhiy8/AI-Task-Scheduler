@@ -19,6 +19,17 @@ export const getTasksSB = async (id: string) => {
   return data;
 };
 
+export const getTasksByIdSB = async (id: string) => {
+  const { data, error } = await supabase
+    .from("todolist")
+    .select()
+    .eq("task_id", id);
+  if (error) {
+    return error;
+  }
+  return data;
+};
+
 export const addTaskSB = async (newTask: NewTask): Promise<Task> => {
   const { error, data } = await supabase
     .from("todolist")
@@ -36,7 +47,9 @@ export const addTaskSB = async (newTask: NewTask): Promise<Task> => {
   return data[0];
 };
 
-export const removeTaskSB = async (_id: string): Promise<{ success: boolean; error?: any }> => {
-  const result = await supabase.from("todolist").delete().eq("task_id", _id);
+export const removeTaskSB = async (
+  id: string,
+): Promise<{ success: boolean; error?: any }> => {
+  const result = await supabase.from("todolist").delete().eq("task_id", id);
   return result;
-}
+};

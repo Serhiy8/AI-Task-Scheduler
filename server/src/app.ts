@@ -22,8 +22,8 @@ app.use(
   })
 );
 app.use("/users", userRouter);
-app.use("/tasks", authenticate, tasksRouter);
-app.use("/tasks/ai", authenticate, createTaskAI);
+app.use("/tasks", tasksRouter);
+app.use("/tasks/ai", createTaskAI);
 
 app.get("/", (req, res) => {
   res.json({

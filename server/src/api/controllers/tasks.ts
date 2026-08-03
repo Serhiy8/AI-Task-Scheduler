@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { addTaskSB, getTasksSB, removeTaskSB } from "../../supabase/supabaseTable";
+import {
+  addTaskSB,
+  getTasksByIdSB,
+  getTasksSB,
+  removeTaskSB,
+} from "../../supabase/supabaseTable";
 import { RequestU } from "../../models/users";
 import { httpError } from "../../utils/utils";
 
@@ -25,7 +30,7 @@ export const createTask = async (
   const { title, description, status = false } = req.body;
 
   if (!req.user) {
-    return httpError(401, "Not authorized");
+    return next(httpError(401, "Not authorized"));
   }
   const { user_id } = req.user;
   const newTask = {
@@ -38,6 +43,34 @@ export const createTask = async (
   res.json(result);
 };
 
+export const getTaskById = async (
+  req: RequestU,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { _id } = req.params;
+  
+  if (!req.user) {
+    return next(httpError(401, "Not authorized"));
+  }
+  const { user_id } = req.user;
+  if (!_id) {
+    return next(httpError(400, "Bad request"));
+  }
+  const result = await getTasksByIdSB(_id as string);
+
+  if (!Array.isArray(result) || result.length === 0) {
+    return next(httpError(404, "Task not found"));
+  }
+
+  const task = result[0];
+  if (user_id !== task.user_id) {
+    return next(httpError(403, "Forbidden"));
+  }
+
+  res.json(task);
+};
+
 export const removeTask = async (
   req: RequestU,
   res: Response,
@@ -47,12 +80,11 @@ export const removeTask = async (
   if (!_id) {
     return next(httpError(400, "Bad request"));
   }
-  console.log("Task ID to remove:", _id);
+
   const result = await removeTaskSB(_id as string);
-  if(!result) {
+  if (!result) {
     return next(httpError(404, "Task not found"));
   }
-  console.log(result)
   res.json({ task_id: _id, message: "Task removed successfully" });
 };
 

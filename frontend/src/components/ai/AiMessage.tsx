@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { setIsHidden } from "../../redux/slice/aiSlice";
+import { setIsHidden, setMessage } from "../../redux/slice/aiSlice";
 import { toast } from "react-toastify";
 import { createTask } from "../../redux/slice/operations/taskOperation";
 import { useNavigate } from "react-router-dom";
-import { DefaultMessageAi } from "../../utils/utils";
 
 export default function AIMessage() {
   const [text, setText] = useState("");
@@ -26,6 +25,13 @@ export default function AIMessage() {
       if (index > selector.description.length) {
         clearInterval(interval);
         dispatch(setIsHidden(false))
+        dispatch(
+          setMessage({
+            title: "",
+            description: "What's the plan for today?",
+            priority: "",
+          }),
+        );
       }
     }, 25);
 
@@ -45,13 +51,13 @@ export default function AIMessage() {
     try {
       await dispatch(createTask(newTask));
       toast.success("Task created successfully");
-      DefaultMessageAi()
       navigate("/tasks")
       
     } catch (error) {
       toast.error("Failed to create task");
       return error;
     }
+    
   }
 
   return (
