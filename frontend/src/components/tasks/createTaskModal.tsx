@@ -1,36 +1,39 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { createTask } from "../redux/slice/operations/taskOperation";
-import { useAppDispatch } from "../hooks/hooks";
+import { createTask } from "../../redux/slice/operations/taskOperation";
+import { useAppDispatch } from "../../hooks/hooks";
+import { DefaultMessageAi } from "../../utils/utils";
 
 type Props = {
   onClose: () => void;
 };
 
 export const CreateTaskModal = ({ onClose }: Props) => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const dispatch = useAppDispatch();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const dispatch = useAppDispatch();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      if(title.trim() === "" || description.trim() === "") {
-        toast.error("Please fill in all fields");
-        return;
-      } 
-      const newTask = {
-        title,
-        description,            
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (title.trim() === "" || description.trim() === "") {
+      toast.error("Please fill in all fields");
+      return;
     }
+    const newTask = {
+      title,
+      description,
+      priority: "low",
+    };
     try {
       await dispatch(createTask(newTask));
       toast.success("Task created successfully");
+      DefaultMessageAi();
       onClose();
     } catch (error) {
       toast.error("Failed to create task");
       return error;
-    }  
     }
+  };
   return (
     <div
       className="
@@ -38,6 +41,7 @@ export const CreateTaskModal = ({ onClose }: Props) => {
         flex items-center justify-center
         bg-black/50
         p-4
+         z-1
       "
     >
       <form
@@ -48,7 +52,7 @@ export const CreateTaskModal = ({ onClose }: Props) => {
           p-6
           shadow-xl
         "
-        onSubmit={handleSubmit}  
+        onSubmit={handleSubmit}
       >
         <h2 className="mb-4 text-xl/9 text-gray-700 font-semibold">
           Create Task
@@ -80,7 +84,7 @@ export const CreateTaskModal = ({ onClose }: Props) => {
           Description
         </label>
         <textarea
-        id="description"
+          id="description"
           className="
             mb-4 w-full rounded-lg border h-50
             px-4 py-2

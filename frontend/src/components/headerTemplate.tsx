@@ -28,10 +28,10 @@ function classNames(...classes: (string | undefined | boolean)[]): string {
 }
 
 export const Header = () => {
-    const dispatch = useAppDispatch();
-    const handleLogout = () => {
-        dispatch(logout());
-    };
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <>
@@ -83,7 +83,6 @@ export const Header = () => {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              
               {/* Profile dropdown */}
               <Menu as="div" className="relative ml-3">
                 <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
@@ -137,11 +136,14 @@ export const Header = () => {
               <NavLink
                 key={item.name}
                 to={item.href}
-                className={({isActive}) => classNames(
-                  isActive
-                    ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-white/5 hover:text-white",
-                  "block rounded-md px-3 py-2 text-base font-medium",
-                )}
+                className={({ isActive }) =>
+                  classNames(
+                    isActive
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-white/5 hover:text-white",
+                    "block rounded-md px-3 py-2 text-base font-medium",
+                  )
+                }
               >
                 {item.name}
               </NavLink>

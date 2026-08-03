@@ -1,10 +1,13 @@
-import { useState, useRef, useEffect, type FC } from "react";
+import { useState, useRef, useEffect} from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { createAiMessage } from "../../redux/slice/operations/aiOperations";
+import { toast } from "react-toastify";
 
-export const AiInput: FC<{ onSubmit: (value: string) => void }> = ({
-  onSubmit,
-}) => {
+export const AiInput = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState("");
+  const isHidden = useAppSelector(state => state.aiMessages.isHidden);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -14,6 +17,17 @@ export const AiInput: FC<{ onSubmit: (value: string) => void }> = ({
 
     textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
   }, [value]);
+
+  const handleSubmit = async () => {
+      const message = {
+        text: value,
+      };
+      if(value.trim() === "") {
+        toast.warning("Request can't be empty.");
+        return;
+      }
+      await dispatch(createAiMessage(message));
+    };
 
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white p-4">
@@ -44,7 +58,8 @@ export const AiInput: FC<{ onSubmit: (value: string) => void }> = ({
         bg-black
         text-white
       "
-          onClick={() => onSubmit(value)}
+      disabled={isHidden}
+          onClick={handleSubmit}          
         >
           ↑
         </button>

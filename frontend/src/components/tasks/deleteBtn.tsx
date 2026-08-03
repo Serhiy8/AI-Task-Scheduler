@@ -1,21 +1,20 @@
 import { Trash2 } from "lucide-react";
-import { useAppDispatch } from "../hooks/hooks";
-import { removeTask } from "../redux/slice/operations/taskOperation";
+import { useAppDispatch } from "../../hooks/hooks";
+import { removeTask } from "../../redux/slice/operations/taskOperation";
 import { toast } from "react-toastify";
 
 export const DeleteBtn: React.FC<{ taskId: string }> = ({ taskId }) => {
-  
   const dispatch = useAppDispatch();
-  
-    const handleDelete = async () => {
+
+  const handleDelete = async () => {
     const result = await dispatch(removeTask(taskId));
-    
-    if(!result) {
-        throw new Error("Failed to delete task");
+
+    if (!result) {
+      throw new Error("Failed to delete task");
     }
     toast.success("Task deleted successfully");
-  }
-    return (
+  };
+  return (
     <button
       type="button"
       className="absolute top-3 right-3 rounded-md p-2 text-gray-500 transition-colors duration-200 hover:bg-red-100 hover:text-red-600"

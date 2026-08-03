@@ -1,21 +1,24 @@
-import AddTaskBtn from "../components/addTaskBtn"
-import TaskItems from "../components/taskItems"
+import AddTaskBtn from "../components/tasks/addTaskBtn";
+import TaskItems from "../components/tasks/taskItems";
 
 export const Dashboard = () => {
   return (
-    <>      
+    <>
       <div className="min-h-full">
-
         <header className="relative bg-white shadow-sm">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              Dashboard
+            </h1>
           </div>
         </header>
         <main>
           <AddTaskBtn />
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{<TaskItems />}</div>
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            {<TaskItems />}
+          </div>
         </main>
       </div>
     </>
-  )
-}
+  );
+};

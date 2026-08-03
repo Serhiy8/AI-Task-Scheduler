@@ -16,23 +16,32 @@ export interface AiMessage {
 interface AiState {
   messages: AiMessage;
   isLoading: boolean;
-  error: string | null;
+  error: string | null | undefined;
+  isHidden: boolean;
 }
 
 const initialState: AiState = {
   messages: {
     title: "",
-    description: "",
-    priority: "",
+    description: "What's the plan for today?",
+    priority: ""
   },
   isLoading: false,
   error: null,
+  isHidden: false,
 };
 
 export const aiSlice = createSlice({
   name: "aiMessages",
   initialState,
-  reducers: {},
+  reducers: {
+    setIsHidden(state, action){
+        state.isHidden = action.payload;
+    },
+    setMessage(state, action){
+        state.messages = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createAiMessage.pending, (state) => {
@@ -41,15 +50,15 @@ export const aiSlice = createSlice({
       .addCase(createAiMessage.fulfilled, (state, action) => {
         state.isLoading = false;
         state.messages = action.payload;
+        Object.assign(state, initialState);
       })
       .addCase(createAiMessage.rejected, (state, action) => {
         state.isLoading = false;
-        state.error =
-          typeof action.payload === "string"
-            ? action.payload
-            : (action.error.message ?? "Failed to create AI message");
+        state.error = action.payload as string | null | undefined;
+        
       });
   },
 });
 
+export const {setIsHidden, setMessage} = aiSlice.actions;
 export default aiSlice.reducer;
