@@ -17,7 +17,7 @@ export const DeleteBtn: React.FC<{ taskId: string }> = ({ taskId }) => {
   return (
     <button
       type="button"
-      className="absolute top-3 right-3 rounded-md p-2 text-gray-500 transition-colors duration-200 hover:bg-red-100 hover:text-red-600"
+      className="absolute top-1 right-1 rounded-md p-2 text-gray-500 transition-colors duration-200 hover:bg-red-100 hover:text-red-600"
       aria-label="Delete product"
       onClick={handleDelete}
     >

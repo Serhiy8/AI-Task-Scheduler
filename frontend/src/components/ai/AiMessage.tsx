@@ -1,64 +1,60 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { setIsHidden, setMessage } from "../../redux/slice/aiSlice";
 import { toast } from "react-toastify";
 import { createTask } from "../../redux/slice/operations/taskOperation";
 import { useNavigate } from "react-router-dom";
+import { initialState, setMessage } from "../../redux/slice/aiSlice";
 
 export default function AIMessage() {
   const [text, setText] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
   const selector = useAppSelector((state) => state.aiMessages.messages);
-  const isHidden = useAppSelector((state) => state.aiMessages.isHidden);
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
     let index = 0;
-    
-    dispatch(setIsHidden(true))
     const interval = setInterval(() => {
+      if (index === 0) {
+        setIsActive(false);
+      }
       setText(selector.description.slice(0, index));
 
       index++;
 
       if (index > selector.description.length) {
         clearInterval(interval);
-        dispatch(setIsHidden(false))
-        dispatch(
-          setMessage({
-            title: "",
-            description: "What's the plan for today?",
-            priority: "",
-          }),
-        );
+        setIsActive(true);
       }
-    }, 25);
+    }, 15);
 
     return () => clearInterval(interval);
   }, [selector.description, dispatch]);
 
-  const onCreateHandle = async() => {
+  const onCreateHandle = async () => {
     const newTask = {
       title: selector.title,
       description: selector.description,
       priority: selector.priority,
-    }
-    if(newTask.description.trim() === "" || newTask.title.trim() === ""){
-      toast.warning("Fields can't be empty.");
+    };
+    if (newTask.description.trim() === "" || newTask.title.trim() === "") {
+      toast.warning("Ask me first).");
       return;
     }
     try {
       await dispatch(createTask(newTask));
       toast.success("Task created successfully");
-      navigate("/tasks")
-      
+      navigate("/tasks");
+      setIsActive(false);
+      dispatch(
+        setMessage(initialState.messages),
+      );
     } catch (error) {
       toast.error("Failed to create task");
       return error;
     }
-    
-  }
+  };
 
   return (
     <div className="flex gap-3 max-w-2xl w-full">
@@ -114,17 +110,29 @@ export default function AIMessage() {
           {text}
           <span className="animate-pulse">|</span>
         </p>
-        {!isHidden && <div className="flex justify-end gap-3">
-                    <button
-            className="
+        <div className="flex justify-end gap-3">
+          {isActive ? (
+            <button
+              className="
               flex justify-center rounded-md bg-indigo-500 px-4 py-2 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500
             "
-            type="button"
-            onClick={onCreateHandle}
-          >
-            Create
-          </button>
-        </div>}
+              type="button"
+              onClick={onCreateHandle}
+            >
+              Create
+            </button>
+          ) : (
+            <button
+              className="
+              flex justify-center rounded-md bg-gray-300 px-4 py-2 text-sm/6 font-semibold text-gray-600 
+            "
+              type="button"
+              onClick={onCreateHandle}
+            >
+              Create
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

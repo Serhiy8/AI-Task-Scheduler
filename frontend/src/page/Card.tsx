@@ -2,31 +2,32 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { getTaskById } from "../redux/slice/operations/taskOperation";
 import { useEffect } from "react";
+import { token } from "../api/api";
 
 export const Card = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const task = useAppSelector((state) => state.tasks.currentTask);
+  const tokenFromState = useAppSelector((state) => state.auth.token);
 
   useEffect(() => {
-    const fetchTaskById = async () => {
-      if (!id) return;
-      await dispatch(getTaskById(id));
-      
-    };
+    if (!tokenFromState) {
+      return;
+    }
+    token.set(tokenFromState);
 
-    fetchTaskById();
-  }, [dispatch, id]);
+    if (!id) return;
+    dispatch(getTaskById(id));
+  }, [dispatch, id, tokenFromState]);
 
   return (
     task && (
       <div
         className="
       group relative flex flex-col justify-between
-      rounded-2xl border border-gray-200 bg-white p-5
+      rounded-b-2xl border border-gray-200 bg-white p-5
       shadow-sm transition-all duration-200
-      hover:-translate-y-1 hover:shadow-lg
-      cursor-pointer
+      
     "
       >
         {/* Header */}
@@ -66,19 +67,6 @@ export const Card = () => {
           {/* Date */}
           <span className="text-xs text-gray-400">Aug 03, 2026</span>
         </div>
-
-        {/* Hover action */}
-        <button
-          className="
-        absolute right-4 top-4
-        hidden rounded-lg bg-gray-100
-        px-2 py-1 text-xs text-gray-600
-        group-hover:block
-        hover:bg-gray-200
-      "
-        >
-          View
-        </button>
       </div>
     )
   );

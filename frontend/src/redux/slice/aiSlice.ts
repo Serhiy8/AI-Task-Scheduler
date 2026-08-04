@@ -20,11 +20,11 @@ interface AiState {
   isHidden: boolean;
 }
 
-const initialState: AiState = {
+export const initialState: AiState = {
   messages: {
     title: "",
     description: "What's the plan for today?",
-    priority: ""
+    priority: "",
   },
   isLoading: false,
   error: null,
@@ -35,12 +35,12 @@ export const aiSlice = createSlice({
   name: "aiMessages",
   initialState,
   reducers: {
-    setIsHidden(state, action){
-        state.isHidden = action.payload;
+    setIsHidden(state, action) {
+      state.isHidden = action.payload;
     },
-    setMessage(state, action){
-        state.messages = action.payload;
-    }
+    setMessage(state, action) {
+      state.messages = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -50,15 +50,13 @@ export const aiSlice = createSlice({
       .addCase(createAiMessage.fulfilled, (state, action) => {
         state.isLoading = false;
         state.messages = action.payload;
-        Object.assign(state, initialState);
       })
       .addCase(createAiMessage.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string | null | undefined;
-        
       });
   },
 });
 
-export const {setIsHidden, setMessage} = aiSlice.actions;
+export const { setIsHidden, setMessage } = aiSlice.actions;
 export default aiSlice.reducer;

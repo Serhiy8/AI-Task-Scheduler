@@ -34,7 +34,6 @@ function App() {
             index
             element={
               <>
-                <AddTaskBtn />
                 <AiCreator />
               </>
             }
