@@ -4,6 +4,7 @@ import {
   getTasksByIdSB,
   getTasksSB,
   removeTaskSB,
+  updateTaskSB,
 } from "../../supabase/supabaseTable";
 import { RequestU } from "../../models/users";
 import { httpError } from "../../utils/utils";
@@ -49,7 +50,7 @@ export const getTaskById = async (
   next: NextFunction,
 ) => {
   const { _id } = req.params;
-  
+
   if (!req.user) {
     return next(httpError(401, "Not authorized"));
   }
@@ -88,8 +89,16 @@ export const removeTask = async (
   res.json({ task_id: _id, message: "Task removed successfully" });
 };
 
-// id: string;
-//   user_id: string;
-//   title: string;
-//   description: string;
-//   status: boolean;
+export const updateTask = async (
+  req: RequestU,
+  res: Response,
+  next: NextFunction,
+) => {
+  const result = await updateTaskSB(req.body);
+  if (!result) {
+    return next(httpError(404, "Task not found"));
+  }
+  res.json({
+    message: "The task has been successfully updated.",
+  });
+};

@@ -35,6 +35,7 @@ export const TaskItems = () => {
           >
             <div className="min-h-full">
               <DeleteBtn taskId={task.task_id ?? ""} />
+              
               <NavLink
                 to={`${task.task_id}`}
                 className="flex flex-col min-h-full"

@@ -1,11 +1,19 @@
 import supabase from "./supabaseCreate";
 import { Task } from "../models/users";
+import { error } from "console";
 
 interface NewTask {
   user_id: string;
   title: string;
   description: string;
   status: boolean;
+}
+
+interface UpdateValue {
+  task_id: string;
+  title?: string;
+  description?: string;
+  status?: boolean;
 }
 
 export const getTasksSB = async (id: string) => {
@@ -28,6 +36,17 @@ export const getTasksByIdSB = async (id: string) => {
     return error;
   }
   return data;
+};
+
+export const updateTaskSB = async (updateValue: UpdateValue) => {
+  const { success, error } = await supabase
+    .from("todolist")
+    .update(updateValue)
+    .eq("task_id", updateValue.task_id);
+  if (error) {
+    throw error;
+  }
+  return success;
 };
 
 export const addTaskSB = async (newTask: NewTask): Promise<Task> => {

@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { getTaskById } from "../redux/slice/operations/taskOperation";
 import { useEffect } from "react";
 import { token } from "../api/api";
+import { PencilBtn } from "../components/tasks/pencilBtn";
 
 export const Card = () => {
   const { id } = useParams();
@@ -24,9 +25,9 @@ export const Card = () => {
     task && (
       <div
         className="
-      group relative flex flex-col justify-between
+      group relative flex flex-col justify-between max-w-2xl min-h-[calc(100vh-64px)]
       rounded-b-2xl border border-gray-200 bg-white p-5
-      shadow-sm transition-all duration-200
+      shadow-sm transition-all duration-200 m-auto
       
     "
       >
@@ -54,18 +55,20 @@ export const Card = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex items-center justify-between flex-1">
           {/* Status */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-end gap-2 ">
             <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
 
             <span className="text-sm text-gray-600">
               {task.status ? "Completed" : "pending"}
             </span>
           </div>
-
+          <PencilBtn />
           {/* Date */}
-          <span className="text-xs text-gray-400">Aug 03, 2026</span>
+          <span className="flex items-end text-xs text-gray-400">
+            Aug 03, 2026
+          </span>
         </div>
       </div>
     )
