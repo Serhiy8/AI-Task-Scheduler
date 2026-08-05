@@ -55,7 +55,7 @@ export const Card = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-6 flex items-center justify-between flex-1">
+        <div className="mt-6 flex justify-between flex-1">
           {/* Status */}
           <div className="flex items-end gap-2 ">
             <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
