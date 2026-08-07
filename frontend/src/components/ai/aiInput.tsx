@@ -61,6 +61,7 @@ export const AiInput = () => {
         rounded-full
         bg-black
         text-white
+        hover:bg-gray-700
       "
           disabled={isLoading}
           onClick={handleSubmit}
