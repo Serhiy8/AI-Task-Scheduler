@@ -48,7 +48,7 @@ export const authenticate = async (
     const { id } = payload;
 
     const user = await getUserById(id);
-    
+
     if (!user.success) {
       next(httpError(401, "Unauthorized"));
       return;
@@ -72,4 +72,3 @@ export const createToken = (payload: TokenPayload, next: NextFunction) => {
     next(httpError(401, "Bad request"));
   }
 };
-

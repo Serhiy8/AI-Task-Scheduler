@@ -2,44 +2,39 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAiMessage } from "./operations/aiOperations";
 
 export enum AiMessagePriority {
-  Low = "low",
-  Medium = "medium",
-  High = "high",
+  Low = "Low",
+  Medium = "Medium",
+  High = "High",
 }
 
 export interface AiMessage {
   title: string;
   description: string;
-  priority: string;
+  priority: AiMessagePriority;
 }
 
 interface AiState {
   messages: AiMessage;
   isLoading: boolean;
   error: string | null | undefined;
-  isHidden: boolean;
 }
 
 export const initialState: AiState = {
   messages: {
     title: "",
     description: "What's the plan for today?",
-    priority: "",
+    priority: AiMessagePriority.Low,
   },
   isLoading: false,
   error: null,
-  isHidden: false,
 };
 
 export const aiSlice = createSlice({
   name: "aiMessages",
   initialState,
   reducers: {
-    setIsHidden(state, action) {
-      state.isHidden = action.payload;
-    },
     setMessage(state, action) {
-      state.messages = action.payload;
+      state.messages = { ...state.messages, ...action.payload };
     },
   },
   extraReducers: (builder) => {
@@ -49,7 +44,7 @@ export const aiSlice = createSlice({
       })
       .addCase(createAiMessage.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.messages = action.payload;
+        state.messages = { ...state.messages, ...action.payload };
       })
       .addCase(createAiMessage.rejected, (state, action) => {
         state.isLoading = false;
@@ -58,5 +53,5 @@ export const aiSlice = createSlice({
   },
 });
 
-export const { setIsHidden, setMessage } = aiSlice.actions;
+export const { setMessage } = aiSlice.actions;
 export default aiSlice.reducer;

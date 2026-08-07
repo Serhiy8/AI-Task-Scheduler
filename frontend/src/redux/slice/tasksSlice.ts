@@ -4,6 +4,7 @@ import {
   getTaskById,
   getTasks,
   removeTask,
+  updateTaskById,
 } from "./operations/taskOperation";
 import type { Task } from "./operations/taskOperation";
 
@@ -70,6 +71,16 @@ const tasksSlice = createSlice({
         state.currentTask = action.payload;
       })
       .addCase(getTaskById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Failed to fetch tasks";
+      })
+      .addCase(updateTaskById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTaskById.fulfilled, (state, action) => {
+        state.currentTask = action.payload;
+      })
+      .addCase(updateTaskById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? "Failed to fetch tasks";
       });

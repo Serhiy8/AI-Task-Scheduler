@@ -28,7 +28,7 @@ export const createTask = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { title, description, status = false } = req.body;
+  const { title, description, status = false, priority = "Low" } = req.body;
 
   if (!req.user) {
     return next(httpError(401, "Not authorized"));
@@ -39,6 +39,7 @@ export const createTask = async (
     title,
     description,
     status,
+    priority,
   };
   const result = await addTaskSB(newTask);
   res.json(result);
@@ -95,10 +96,10 @@ export const updateTask = async (
   next: NextFunction,
 ) => {
   const result = await updateTaskSB(req.body);
+  console.log(result);
   if (!result) {
     return next(httpError(404, "Task not found"));
   }
-  res.json({
-    message: "The task has been successfully updated.",
-  });
+  res.json(result);
 };
+

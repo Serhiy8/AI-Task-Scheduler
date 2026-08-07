@@ -1,6 +1,12 @@
 import Joi from "joi";
 import { Request } from "express";
 
+enum Priority {
+  low = "Low",
+  medium = "Medium",
+  high = "High",
+}
+
 interface User {
   user_id: string;
   created_at: string;
@@ -15,6 +21,7 @@ export interface Task {
   title: string;
   description: string;
   status: boolean;
+  priority: Priority;
 }
 
 export interface RequestU extends Request {
@@ -48,4 +55,5 @@ export const createTaskSchema = Joi.object<Task>({
   title: Joi.string().required(),
   description: Joi.string().required(),
   status: Boolean,
+  priority: Joi.string().required(),
 });

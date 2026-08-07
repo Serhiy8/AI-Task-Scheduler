@@ -32,7 +32,7 @@ export const Register = () => {
             alt="Your Company"
             src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
             className="mx-auto h-10 w-auto"
-          />
+            />
           <p className="text-center mt-6 font-bold text-gray-700 text-1xl/9">AI Task Manager</p>
           <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-700">Sign in to your account</h2>
         </div>

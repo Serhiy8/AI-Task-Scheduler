@@ -7,7 +7,7 @@ import {
   logout,
   register,
 } from "./operations/authOperations";
-import { token } from "../../api/api";
+import { tokenHeader } from "../../api/api";
 
 interface User {
   user_id: string;
@@ -60,7 +60,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isLoggedIn = true;
-        token.set(action.payload.token);
+        tokenHeader.set(action.payload.token);
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
@@ -74,7 +74,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isLoggedIn = true;
-        token.set(action.payload.token);
+        tokenHeader.set(action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -84,7 +84,7 @@ const authSlice = createSlice({
         state.user = initialState.user;
         state.token = null;
         state.isLoggedIn = false;
-        token.unset();
+        tokenHeader.unset();
       })
       .addCase(currentUser.pending, (state) => {
         state.isLoading = true;

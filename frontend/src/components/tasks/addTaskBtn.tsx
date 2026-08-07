@@ -22,7 +22,11 @@ const AddTaskBtn: React.FC = () => {
       >
         <Plus size={28} />
       </button>
-      {isOpen && <CreateTaskModal onClose={() => setIsOpen(false)} />}
+      {isOpen && (
+        <CreateTaskModal
+          onClose={() => setIsOpen(false)}
+        />
+      )}
     </>
   );
 };

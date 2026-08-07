@@ -39,14 +39,16 @@ export const getTasksByIdSB = async (id: string) => {
 };
 
 export const updateTaskSB = async (updateValue: UpdateValue) => {
-  const { success, error } = await supabase
+  const { data, error } = await supabase
     .from("todolist")
     .update(updateValue)
-    .eq("task_id", updateValue.task_id);
+    .eq("task_id", updateValue.task_id)
+    .select()
+    .single();
   if (error) {
     throw error;
   }
-  return success;
+  return data;
 };
 
 export const addTaskSB = async (newTask: NewTask): Promise<Task> => {

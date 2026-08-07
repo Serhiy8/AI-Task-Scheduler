@@ -2,12 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { createAiMessage } from "../../redux/slice/operations/aiOperations";
 import { toast } from "react-toastify";
+import { BasrLoader } from "../../utils/utils";
+import { Send } from "lucide-react";
 
 export const AiInput = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState("");
-  const isHidden = useAppSelector((state) => state.aiMessages.isHidden);
   const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.aiMessages.isLoading);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -53,16 +55,23 @@ export const AiInput = () => {
 
         <button
           className="
+          relative
         h-10
         w-10
         rounded-full
         bg-black
         text-white
       "
-          disabled={isHidden}
+          disabled={isLoading}
           onClick={handleSubmit}
         >
-          ↑
+          {isLoading ? (
+            <BasrLoader />
+          ) : (
+            <span className="absolute top-2.5 left-1.5">
+              <Send color="#F3F4F6" />
+            </span>
+          )}
         </button>
       </div>
     </div>

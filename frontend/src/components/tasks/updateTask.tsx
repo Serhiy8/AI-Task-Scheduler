@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { createTask } from "../../redux/slice/operations/taskOperation";
 import { useAppDispatch } from "../../hooks/hooks";
-import { AiMessagePriority, setMessage } from "../../redux/slice/aiSlice";
+import {
+  updateTaskById,
+  type Task,
+} from "../../redux/slice/operations/taskOperation";
+import { toast } from "react-toastify";
+import { AiMessagePriority } from "../../redux/slice/aiSlice";
 
-type Props = {
+interface UpdateTaskProps {
   onClose: () => void;
-};
+  task: Task;
+}
 
-export const CreateTaskModal = ({ onClose }: Props) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+export const UpdateTask = ({ task, onClose }: UpdateTaskProps) => {
+  const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.description);
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,27 +23,22 @@ export const CreateTaskModal = ({ onClose }: Props) => {
       toast.error("Please fill in all fields");
       return;
     }
-    const newTask = {
+    const updateTask = {
+      task_id: task.task_id,
       title,
       description,
       priority: AiMessagePriority.Low,
     };
     try {
-      await dispatch(createTask(newTask));
+      await dispatch(updateTaskById(updateTask));
+      toast.success("The task has been successfully updated.");
     } catch (error) {
-      toast.error("Failed to create task");
+      toast.error("Failed to update task");
       return error;
-    }
-    toast.success("Task created successfully");
-    dispatch(
-      setMessage({
-        title: "",
-        description: "What's the plan for today?",
-        priority: AiMessagePriority.Low,
-      }),
-    );
-    onClose();
+      }
+      onClose()
   };
+
   return (
     <div
       className="
@@ -61,7 +60,7 @@ export const CreateTaskModal = ({ onClose }: Props) => {
         onSubmit={handleSubmit}
       >
         <h2 className="mb-4 text-xl/9 text-gray-700 font-semibold">
-          Create task
+          Update task
         </h2>
 
         <label

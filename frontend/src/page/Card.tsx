@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { getTaskById } from "../redux/slice/operations/taskOperation";
 import { useEffect } from "react";
-import { token } from "../api/api";
+import { tokenHeader } from "../api/api";
 import { PencilBtn } from "../components/tasks/pencilBtn";
 
 export const Card = () => {
@@ -15,7 +15,7 @@ export const Card = () => {
     if (!tokenFromState) {
       return;
     }
-    token.set(tokenFromState);
+    tokenHeader.set(tokenFromState);
 
     if (!id) return;
     dispatch(getTaskById(id));
@@ -38,19 +38,23 @@ export const Card = () => {
               {task.title}
             </h3>
 
-            <p className="mt-2 text-sm text-gray-500 line-clamp-3">
+            <p className="mt-2 text-sm text-gray-500 whitespace-pre-wrap">
               {task.description}
             </p>
           </div>
 
           {/* Priority badge */}
           <span
-            className="
-          rounded-full bg-red-100 px-3 py-1
-          text-xs font-medium text-red-600
-        "
+            className={`rounded-full px-3 py-1
+          text-xs font-medium ${
+            task.priority === "Low"
+              ? "bg-green-100 text-green-700"
+              : task.priority === "Medium"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+          }`}
           >
-            High
+            {task.priority}
           </span>
         </div>
 
@@ -64,7 +68,8 @@ export const Card = () => {
               {task.status ? "Completed" : "pending"}
             </span>
           </div>
-          <PencilBtn />
+
+          {id ? <PencilBtn task={task} /> : null}
           {/* Date */}
           <span className="flex items-end text-xs text-gray-400">
             Aug 03, 2026

@@ -51,7 +51,7 @@ function App() {
             path="/tasks/:id"
             element={
               <>
-                <Card />                
+                <Card />
               </>
             }
           />
