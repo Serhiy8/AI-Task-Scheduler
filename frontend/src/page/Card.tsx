@@ -10,6 +10,9 @@ export const Card = () => {
   const dispatch = useAppDispatch();
   const task = useAppSelector((state) => state.tasks.currentTask);
   const tokenFromState = useAppSelector((state) => state.auth.token);
+  const date = task?.created_at
+    ? new Date(task.created_at).toDateString().slice(4)
+    : "";
 
   useEffect(() => {
     if (!tokenFromState) {
@@ -71,9 +74,13 @@ export const Card = () => {
 
           {id ? <PencilBtn task={task} /> : null}
           {/* Date */}
-          <span className="flex items-end text-xs text-gray-400">
-            Aug 03, 2026
-          </span>
+          {date ? (
+            <span className="flex items-end text-xs text-gray-400">{date}</span>
+          ) : (
+            <span className="flex items-end text-xs text-gray-400">
+              --- -- ----
+            </span>
+          )}
         </div>
       </div>
     )
