@@ -28,8 +28,8 @@ export const AiInput = () => {
       toast.warning("Request can't be empty.");
       return;
     }
-    await dispatch(createAiMessage(message));
     setValue("");
+    await dispatch(createAiMessage(message));
   };
 
   return (
